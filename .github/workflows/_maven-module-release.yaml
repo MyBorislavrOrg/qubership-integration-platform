@@ -98,7 +98,6 @@ jobs:
           version-type: ${{ inputs.version-type }}
           ref: ${{ github.ref }}
           module: ${{ inputs.module }}
-          monorepo: 'true'
           maven-args: ${{ inputs.mvn-args }}
           profile: ${{ inputs.profile }}
           server-id: ${{ inputs.profile }}
