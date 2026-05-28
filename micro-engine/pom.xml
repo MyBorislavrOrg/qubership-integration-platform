@@ -9,7 +9,7 @@
     <description>Engine service orchestrates and runs integration chains, manages their endpoints, records executions,
         collects metrics, and publishes deployment state, using Apache Camel, Consul, and OpenSearch
     </description>
-    <url>https://github.com/netcracker/qubership-integration-platform</url>
+    <url>https://github.com/myborislavrorg/qubership-integration-platform</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -25,10 +25,10 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:https://github.com/netcracker/qubership-integration-platform.git</connection>
-        <developerConnection>scm:git:https://github.com/netcracker/qubership-integration-platform.git
+        <connection>scm:git:https://github.com/myborislavrorg/qubership-integration-platform.git</connection>
+        <developerConnection>scm:git:https://github.com/myborislavrorg/qubership-integration-platform.git
         </developerConnection>
-        <url>scm:git:https://github.com/netcracker/qubership-integration-platform.git</url>
+        <url>scm:git:https://github.com/myborislavrorg/qubership-integration-platform.git</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -108,7 +108,7 @@
         <!-- GitHub packages repository for both release and SNAPSHOT versions -->
         <repository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/netcracker/*</url>
+            <url>https://maven.pkg.github.com/myborislavrorg/*</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -1049,7 +1049,7 @@
                     <id>github</id>
                     <name>GitHub Packages</name>
                     <url>
-                        https://maven.pkg.github.com/netcracker/qubership-integration-platform
+                        https://maven.pkg.github.com/myborislavrorg/qubership-integration-platform
                     </url>
                 </repository>
             </distributionManagement>
