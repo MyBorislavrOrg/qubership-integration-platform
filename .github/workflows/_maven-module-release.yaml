@@ -91,8 +91,12 @@ jobs:
     permissions:
       contents: write
       packages: write
+    outputs:
+      release-version: ${{ steps.build_publish.outputs.release-version }}
+      release-tag: ${{ steps.build_publish.outputs.release-tag }}
     steps:
       - name: "Build and Publish"
+        id: build_publish
         uses: netcracker/qubership-workflow-hub/actions/maven-release@feature/764-feat-maven-release-action-should-be-able-to-create-releases-in-a-monorepo
         with:
           version-type: ${{ inputs.version-type }}
@@ -122,17 +126,19 @@ jobs:
     steps:
       - name: "Docker Build"
         id: docker_build
-        uses: netcracker/qubership-workflow-hub/actions/docker-action@ac0b35120b940eaa644cdcfee7d4957038998ec2 # v2.0.9
+        uses: netcracker/qubership-workflow-hub/actions/docker-action@v2.3.0
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ needs.build-and-publish.outputs.release-tag }}
           download-artifact: true
           download-artifact-name: ${{ inputs.module }}-jar
+          component: '[{"name": "default", "dockerfile": "./${{ inputs.module }}/Dockerfile", "build_context": "./${{ inputs.module }}"}]'
+          tags: ${{ needs.build-and-publish.outputs.release-version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   create-release:
     if: ${{ inputs.create-github-release == true }}
-    needs: build-and-publish
+    needs: [build-and-publish, publish-image]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -140,17 +146,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          persist-credentials: false
+          ref: ${{ needs.build-and-publish.outputs.release-tag }}
           fetch-depth: 0
-          ref: ${{ github.ref }}
+          persist-credentials: false
+
       - name: Run Release Drafter
         uses: netcracker/release-drafter@86f4276a3894b5af70480e826c32fe3648ac6a70 # v1.0.0
         with:
           config-name: "release-drafter-config.yml"
           publish: true
-          prerelease: ${{ github.ref_name != 'main' }}
-          name: '${{ inputs.module }}-${{ inputs.version }}'
-          tag: '${{ inputs.module }}-v${{ inputs.version }}'
-          version: '${{ inputs.module }}-v${{ inputs.version }}'
+          name: '${{ needs.build-and-publish.outputs.release-tag }}'
+          tag: '${{ needs.build-and-publish.outputs.release-tag }}'
+          version: '${{ needs.build-and-publish.outputs.release-version }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
